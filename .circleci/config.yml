@@ -18,17 +18,22 @@ jobs:
   build: # name of your job
     executor: win-gui-2023-07
     steps:
-      # approx: 450MB
-      - run: |
-          fsutil file createnew test50_0.txt 52428800
-          fsutil file createnew test50_1.txt 52428800
-          fsutil file createnew test50_2.txt 52428800
-          fsutil file createnew test50_3.txt 52428800
-          fsutil file createnew test50_4.txt 52428800
-          fsutil file createnew test50_5.txt 52428800
-          fsutil file createnew test50_6.txt 52428800
-          fsutil file createnew test50_7.txt 52428800
-          fsutil file createnew test50_8.txt 52428800
+      # approx: 128 MB x 4 = 512 MB
+      - run:
+          name: generate files
+          shell: bash.exe
+          command: |
+            echo "This is just a sample line appended  to create a big file. " > dummy0.txt
+            for /L %i in (1,1,21) do type dummy0.txt >> dummy0.txt
+
+            echo "This is just a sample line appended  to create a big file. " > dummy1.txt
+            for /L %i in (1,1,21) do type dummy1.txt >> dummy1.txt
+
+            echo "This is just a sample line appended  to create a big file. " > dummy2.txt
+            for /L %i in (1,1,21) do type dummy2.txt >> dummy2.txt
+
+            echo "This is just a sample line appended  to create a big file. " > dummy3.txt
+            for /L %i in (1,1,21) do type dummy3.txt >> dummy3.txt
       - persist_to_workspace:
           root: .
           paths:
