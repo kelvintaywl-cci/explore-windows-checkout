@@ -26,7 +26,8 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            # approx 250 MB
+            # image is approx 250 MB
+            # tar file is approx 90 MB
             - nanoserver.tar
   attach:
     parameters:
