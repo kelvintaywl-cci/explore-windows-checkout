@@ -46,6 +46,9 @@ jobs:
           split-by-sec: 5
       - attach_workspace:
           at: .
+      # Stop recording and save records
+      - win-perf-diag/ensure-and-save-wpr
+      - win-perf-diag/stop-and-save-perflog
 
 workflows:
   work-this-space:
