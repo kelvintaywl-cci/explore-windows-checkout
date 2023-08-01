@@ -18,26 +18,16 @@ jobs:
   build: # name of your job
     executor: win-gui-2023-07
     steps:
-      # approx: 128 MB x 4 = 512 MB
       - run:
           name: generate files
-          shell: bash.exe
           command: |
-            echo "This is just a sample line appended  to create a big file. " > dummy0.txt
-            for /L %i in (1,1,21) do type dummy0.txt >> dummy0.txt
-
-            echo "This is just a sample line appended  to create a big file. " > dummy1.txt
-            for /L %i in (1,1,21) do type dummy1.txt >> dummy1.txt
-
-            echo "This is just a sample line appended  to create a big file. " > dummy2.txt
-            for /L %i in (1,1,21) do type dummy2.txt >> dummy2.txt
-
-            echo "This is just a sample line appended  to create a big file. " > dummy3.txt
-            for /L %i in (1,1,21) do type dummy3.txt >> dummy3.txt
+            docker pull mcr.microsoft.com/windows/nanoserver:ltsc2019
+            docker image save mcr.microsoft.com/windows/nanoserver:ltsc2019 -o nanoserver.tar
       - persist_to_workspace:
           root: .
           paths:
-            - .
+            # approx 250 MB
+            - nanoserver.tar
   attach:
     parameters:
       exec:
