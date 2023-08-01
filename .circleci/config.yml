@@ -1,4 +1,8 @@
-version: 2.1 # Use version 2.1 to enable orb usage.
+version: 2.1
+
+orbs:
+  win-perf-diag: circle-makotom-orbs/windows-performance-diagnosis@volatile
+
 
 executors:
   win-gui-2023-04:
@@ -35,6 +39,11 @@ jobs:
         type: executor
     executor: << parameters.exec >>
     steps:
+      # Start recording
+      - win-perf-diag/start-perflog
+      - win-perf-diag/record-wpr-in-background:
+          for-sec: 100
+          split-by-sec: 5
       - attach_workspace:
           at: .
 
