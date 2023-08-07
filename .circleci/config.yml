@@ -44,15 +44,15 @@ jobs:
     executor: << parameters.exec >>
     steps:
       # Start recording
-      - win-perf-diag/start-perflog
-      - win-perf-diag/record-wpr-in-background:
-          for-sec: 100
-          split-by-sec: 5
+      # - win-perf-diag/start-perflog
+      # - win-perf-diag/record-wpr-in-background:
+      #     for-sec: 100
+      #     split-by-sec: 5
       - attach_workspace:
           at: .
       # Stop recording and save records
-      - win-perf-diag/ensure-and-save-wpr
-      - win-perf-diag/stop-and-save-perflog
+      # - win-perf-diag/ensure-and-save-wpr
+      # - win-perf-diag/stop-and-save-perflog
 
 workflows:
   work-this-space:
@@ -65,6 +65,6 @@ workflows:
             parameters:
               exec:
                 - win-gui-2023-04
-                # - win-gui-2023-06
-                # - win-gui-2023-07
+                - win-gui-2023-06
+                - win-gui-2023-07
                 - win-gui-2023-08
