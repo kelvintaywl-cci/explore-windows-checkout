@@ -1,20 +1,31 @@
-version: 2.1 # Use version 2.1 to enable orb usage.
+version: 2.1
 
 orbs:
-  win: circleci/windows@5.0 # The Windows orb give you everything you need to start using the Windows executor.
+  win: circleci/windows@5.0
 
 jobs:
-  build: # name of your job
-    executor:
-      name: win/default # executor type
-      size: "medium" # resource class, can be "medium", "large", "xlarge", "2xlarge", defaults to "medium" if not specified
+  build:
+    parameters:
+      img:
+        type: string
+    resource_class: "windows.medium"
+    machine:
+      image: << parameters.img >>
 
     steps:
-      # Commands are run in a Windows virtual machine environment
       - checkout
       - run:
-          name: inspect
+          name: check NVM
           shell: bash.exe
           command: |
-            cat -A lf.txt
-            cat -A crlf.txt
+            nvm -v
+
+workflows:
+  nvm:
+    jobs:
+      - build:
+          matrix:
+            parameters:
+              img:
+                - "windows-server-2019-vs2019:current"
+                - "windows-server-2022-gui:current"
