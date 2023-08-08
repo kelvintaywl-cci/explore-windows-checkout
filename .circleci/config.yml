@@ -22,6 +22,18 @@ executors:
       image: 'windows-server-2022-gui:edge'
     resource_class: 'windows.medium'
 
+commands:
+  inspect-msys2:
+    steps:
+      - run:
+          name: Check Msys2 version
+          command: |
+            uname -a | cut -d " " -f 3
+      - run:
+          name: Check git version
+          command: |
+            git --version
+
 jobs:
   build: # name of your job
     executor: win-gui-2023-07
@@ -41,6 +53,9 @@ jobs:
     parameters:
       exec:
         type: executor
+      force-git-version:
+        type: string
+        default: ""
     executor: << parameters.exec >>
     steps:
       # Start recording
@@ -48,14 +63,16 @@ jobs:
       # - win-perf-diag/record-wpr-in-background:
       #     for-sec: 100
       #     split-by-sec: 60
-      - run:
-          name: Check Msys2 version
-          command: |
-            uname -a | cut -d " " -f 3
-      - run:
-          name: Check git version
-          command: |
-            git --version
+      - inspect-msys2
+      - when:
+          # as long it is not an empty string
+          condition: << parameters.force-git-version >>
+          steps:
+            - run:
+                name: Force install git version << parameters.force-git-version >>
+                command: |
+                  choco install git --version << parameters.force-git-version >> --force --allow-downgrade
+            - inspect-msys2
       - attach_workspace:
           at: .
       # Stop recording and save records
@@ -66,6 +83,19 @@ workflows:
   work-this-space:
     jobs:
       - build
+      - attach:
+          name: attach-force-git
+          requires:
+            - build
+          matrix:
+            parameters:
+              force-git-version:
+                - "2.40.0"
+              exec:
+                - win-gui-2023-04
+                - win-gui-2023-06
+                - win-gui-2023-07
+                - win-gui-2023-08
       - attach:
           requires:
             - build
