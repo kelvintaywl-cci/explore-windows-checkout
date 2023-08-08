@@ -44,15 +44,23 @@ jobs:
     executor: << parameters.exec >>
     steps:
       # Start recording
-      - win-perf-diag/start-perflog
-      - win-perf-diag/record-wpr-in-background:
-          for-sec: 100
-          split-by-sec: 60
+      # - win-perf-diag/start-perflog
+      # - win-perf-diag/record-wpr-in-background:
+      #     for-sec: 100
+      #     split-by-sec: 60
+      - run:
+          name: Check Msys2 version
+          command: |
+            uname -a | cut -d " " -f 3
+      - run:
+          name: Check git version
+          command: |
+            git --version
       - attach_workspace:
           at: .
       # Stop recording and save records
-      - win-perf-diag/ensure-and-save-wpr
-      - win-perf-diag/stop-and-save-perflog
+      # - win-perf-diag/ensure-and-save-wpr
+      # - win-perf-diag/stop-and-save-perflog
 
 workflows:
   work-this-space:
