@@ -71,7 +71,7 @@ jobs:
             - run:
                 name: Force install git version << parameters.force-git-version >>
                 command: |
-                  choco install git --version << parameters.force-git-version >> --force --allow-downgrade
+                  choco install git --version << parameters.force-git-version >> --force --allow-downgrade -y
             - inspect-msys2
       - attach_workspace:
           at: .
@@ -95,7 +95,6 @@ workflows:
                 - win-gui-2023-04
                 - win-gui-2023-06
                 - win-gui-2023-07
-                - win-gui-2023-08
       - attach:
           requires:
             - build
@@ -105,4 +104,3 @@ workflows:
                 - win-gui-2023-04
                 - win-gui-2023-06
                 - win-gui-2023-07
-                - win-gui-2023-08
