@@ -41,6 +41,8 @@ jobs:
     parameters:
       exec:
         type: executor
+      disable-windows-defender:
+        type: boolean
     executor: << parameters.exec >>
     steps:
       # Start recording
@@ -48,11 +50,14 @@ jobs:
       - win-perf-diag/record-wpr-in-background:
           for-sec: 100
           split-by-sec: 60
-      - run:
-          # Ref: https://businesshelp.avast.com/Content/Products/SysReqs/DisablingWinDefenderSrv1619.htm 
-          name: Disable Windows Defender
-          shell: powershell.exe
-          command: Uninstall-WindowsFeature -Name Windows-Defender
+      - when:
+          condition: << parameters.disable-windows-defender >>
+          steps:
+            - run:
+                # Ref: https://businesshelp.avast.com/Content/Products/SysReqs/DisablingWinDefenderSrv1619.htm 
+                name: Disable Windows Defender
+                shell: powershell.exe
+                command: Uninstall-WindowsFeature -Name Windows-Defender
       - attach_workspace:
           at: .
       # Stop recording and save records
@@ -73,3 +78,6 @@ workflows:
                 # - win-gui-2023-06
                 - win-gui-2023-07
                 # - win-gui-2023-08
+              disable-windows-defender:
+                - true
+                - false
