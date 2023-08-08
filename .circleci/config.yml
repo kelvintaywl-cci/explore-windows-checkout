@@ -71,7 +71,7 @@ jobs:
             - run:
                 name: Force install git version << parameters.force-git-version >>
                 command: |
-                  choco install git --version << parameters.force-git-version >> --force --allow-downgrade -y
+                  choco install -y git --version << parameters.force-git-version >> --force
             - inspect-msys2
       - attach_workspace:
           at: .
