@@ -3,7 +3,6 @@ version: 2.1
 orbs:
   win-perf-diag: circle-makotom-orbs/windows-performance-diagnosis@volatile
 
-
 executors:
   win-gui-2023-04:
     machine:
@@ -81,7 +80,7 @@ jobs:
       - inspect-msys2
       - when:
           condition:
-            equals: [ "replace-msys2", << parameters.note >> ]
+            equal: [ "replace-msys2", << parameters.note >> ]
           steps:
             - download-git-2401
             - inspect-msys2
