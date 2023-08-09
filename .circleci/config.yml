@@ -9,22 +9,18 @@ executors:
     machine:
       image: 'windows-server-2022-gui:2023.04.1'
     resource_class: 'windows.medium'
-    shell: powershell.exe
   win-gui-2023-06:
     machine:
       image: 'windows-server-2022-gui:2023.06.1'
     resource_class: 'windows.medium'
-    shell: powershell.exe
   win-gui-2023-07:
     machine:
       image: 'windows-server-2022-gui:2023.07.1'
     resource_class: 'windows.medium'
-    shell: powershell.exe
   win-gui-2023-08:
     machine:
       image: 'windows-server-2022-gui:edge'
     resource_class: 'windows.medium'
-    shell: powershell.exe
 
 commands:
   # ACKNOWLEDGEMENTS:
@@ -34,6 +30,7 @@ commands:
       - run:
           name: |
             Download Zip'ed MinGit (minimal Git for Windows) to obtain the msys-2.0.dll we want to use
+          shell: bash
           command: curl -sSJL -o MinGit.zip https://github.com/git-for-windows/git/releases/download/v2.40.1.windows.1/MinGit-2.40.1-64-bit.zip
       - run:
           name: Extract downloaded MinGit
