@@ -81,7 +81,7 @@ jobs:
       - inspect-msys2
       - when:
           condition:
-            equals: [ "replace-msys2", << parameters.note>>]
+            equals: [ "replace-msys2", << parameters.note >> ]
           steps:
             - download-git-2401
             - inspect-msys2
@@ -100,6 +100,8 @@ workflows:
             - build
           matrix:
             parameters:
+              note:
+                - ""
               exec:
                 - win-gui-2023-04
                 - win-gui-2023-06
@@ -110,7 +112,7 @@ workflows:
           matrix:
             parameters:
               note:
-                - replace-msys2
+                - "replace-msys2"
               exec:
                 - win-gui-2023-04
                 - win-gui-2023-06
