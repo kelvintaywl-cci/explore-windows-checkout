@@ -27,6 +27,24 @@ executors:
     shell: powershell.exe
 
 commands:
+  # ACKNOWLEDGEMENTS:
+  # this was kindly shared by https://github.com/circle-makotom (thank you so much!)
+  download-git-2401:
+    steps:
+      - run:
+          name: |
+            Download Zip'ed MinGit (minimal Git for Windows) to obtain the msys-2.0.dll we want to use
+          command: curl -sSJL -o MinGit.zip https://github.com/git-for-windows/git/releases/download/v2.40.1.windows.1/MinGit-2.40.1-64-bit.zip
+      - run:
+          name: Extract downloaded MinGit
+          command: |
+            Expand-Archive "MinGit.zip" MinGit
+          shell: powershell.exe
+      - run:
+          name: Replace the existing msys-2.0.dll
+          command: |
+            Copy-Item '.\MinGit\usr\bin\msys-2.0.dll' 'C:\Program Files\Git\usr\bin\msys-2.0.dll' -Force
+          shell: powershell.exe
   inspect-msys2:
     steps:
       - run:
@@ -68,10 +86,7 @@ jobs:
           condition:
             equals: [ "replace-msys2", << parameters.note>>]
           steps:
-            - run:
-                command: |
-                  Copy-Item msys-2.0.dll 'C:\Program Files\Git\usr\bin\msys-2.0.dll' -Force
-                shell: powershell.exe
+            - download-git-2401
             - inspect-msys2
       - attach_workspace:
           at: .
