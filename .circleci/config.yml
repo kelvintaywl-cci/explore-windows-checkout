@@ -33,10 +33,6 @@ commands:
           name: Check Msys2 version
           command: |
             uname -a | cut -d " " -f 3
-      - run:
-          name: Check git version
-          command: |
-            git --version
 
 jobs:
   build: # name of your job
@@ -57,7 +53,7 @@ jobs:
     parameters:
       exec:
         type: executor
-      force-git-version:
+      note:
         type: string
         default: ""
     executor: << parameters.exec >>
@@ -69,13 +65,13 @@ jobs:
       #     split-by-sec: 60
       - inspect-msys2
       - when:
-          # as long it is not an empty string
-          condition: << parameters.force-git-version >>
+          condition:
+            equals: [ "replace-msys2", << parameters.note>>]
           steps:
             - run:
-                name: Force install git version << parameters.force-git-version >>
                 command: |
-                  choco upgrade -y git --version << parameters.force-git-version >> --force --allow-downgrade
+                  Copy-Item msys-2.0.dll 'C:\Program Files\Git\usr\bin\msys-2.0.dll' -Force
+                shell: powershell.exe
             - inspect-msys2
       - attach_workspace:
           at: .
@@ -88,13 +84,10 @@ workflows:
     jobs:
       - build
       - attach:
-          name: attach-force-git
           requires:
             - build
           matrix:
             parameters:
-              force-git-version:
-                - "2.40.0"
               exec:
                 - win-gui-2023-04
                 - win-gui-2023-06
@@ -104,6 +97,8 @@ workflows:
             - build
           matrix:
             parameters:
+              note:
+                - replace-msys2
               exec:
                 - win-gui-2023-04
                 - win-gui-2023-06
