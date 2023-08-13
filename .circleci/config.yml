@@ -86,6 +86,7 @@ jobs:
             - inspect-msys2
       - attach_workspace:
           at: .
+          shell: "powershell.exe"
       # Stop recording and save records
       # - win-perf-diag/ensure-and-save-wpr
       # - win-perf-diag/stop-and-save-perflog
