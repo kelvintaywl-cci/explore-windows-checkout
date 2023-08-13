@@ -106,14 +106,14 @@ workflows:
                 - win-gui-2023-04
                 - win-gui-2023-06
                 - win-gui-2023-07
-      - attach:
-          requires:
-            - build
-          matrix:
-            parameters:
-              note:
-                - "replace-msys2"
-              exec:
-                - win-gui-2023-04
-                - win-gui-2023-06
-                - win-gui-2023-07
+      # - attach:
+      #     requires:
+      #       - build
+      #     matrix:
+      #       parameters:
+      #         note:
+      #           - "replace-msys2"
+      #         exec:
+      #           - win-gui-2023-04
+      #           - win-gui-2023-06
+      #           - win-gui-2023-07
