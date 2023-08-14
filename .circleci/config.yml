@@ -84,9 +84,19 @@ jobs:
           steps:
             - download-git-2401
             - inspect-msys2
-      - attach_workspace:
-          at: .
-          shell: "powershell.exe"
+      - when:
+          condition:
+            equal: [ "replace-shell", << parameters.note >>]
+          steps:
+            - attach_workspace:
+                at: .
+                shell: "powershell.exe"
+      - unless:
+          condition:
+            equal: [ "replace-shell", << parameters.note >>]
+          steps:
+            - attach_workspace:
+                at: .
       # Stop recording and save records
       # - win-perf-diag/ensure-and-save-wpr
       # - win-perf-diag/stop-and-save-perflog
@@ -106,14 +116,14 @@ workflows:
                 - win-gui-2023-04
                 - win-gui-2023-06
                 - win-gui-2023-07
-      # - attach:
-      #     requires:
-      #       - build
-      #     matrix:
-      #       parameters:
-      #         note:
-      #           - "replace-msys2"
-      #         exec:
-      #           - win-gui-2023-04
-      #           - win-gui-2023-06
-      #           - win-gui-2023-07
+      - attach:
+          requires:
+            - build
+          matrix:
+            parameters:
+              note:
+                - "replace-shell"
+              exec:
+                - win-gui-2023-04
+                - win-gui-2023-06
+                - win-gui-2023-07
