@@ -1,13 +1,13 @@
 version: 2.1
 
-orbs:
-  win-perf-diag: circle-makotom-orbs/windows-performance-diagnosis@volatile
-
-
 executors:
   win-gui-2023-04:
     machine:
       image: 'windows-server-2022-gui:2023.04.1'
+    resource_class: 'windows.medium'
+  win-gui-2023-05:
+    machine:
+      image: 'windows-server-2022-gui:2023.05.1'
     resource_class: 'windows.medium'
   win-gui-2023-06:
     machine:
@@ -37,34 +37,37 @@ jobs:
             # image is approx 250 MB
             # tar file is approx 90 MB
             - nanoserver.tar
-  attach:
+  gitclone:
     parameters:
       exec:
         type: executor
     executor: << parameters.exec >>
     steps:
       # Start recording
-      - win-perf-diag/start-perflog
-      - win-perf-diag/record-wpr-in-background:
-          for-sec: 100
-          split-by-sec: 60
-      - attach_workspace:
-          at: .
+      # - win-perf-diag/start-perflog
+      # - win-perf-diag/record-wpr-in-background:
+      #     for-sec: 100
+      #     split-by-sec: 60
+      - run:
+          command: |
+            git init
+            git remote add origin https://github.com/arangodb/arangodb.git
+            echo "Fetching stuff"
+            git fetch --depth 1 origin 4192013cb700a80cc14d5f0a629b391209b07677
+            git checkout 4192013cb700a80cc14d5f0a629b391209b07677
+          name: Checkout ArangoDB
       # Stop recording and save records
-      - win-perf-diag/ensure-and-save-wpr
-      - win-perf-diag/stop-and-save-perflog
+      # - win-perf-diag/ensure-and-save-wpr
+      # - win-perf-diag/stop-and-save-perflog
 
 workflows:
-  work-this-space:
+  check-this-out:
     jobs:
-      - build
-      - attach:
-          requires:
-            - build
+      - gitclone:
           matrix:
             parameters:
               exec:
                 - win-gui-2023-04
+                - win-gui-2023-05
                 - win-gui-2023-06
                 - win-gui-2023-07
-                - win-gui-2023-08
